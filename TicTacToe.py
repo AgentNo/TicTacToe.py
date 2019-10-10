@@ -32,7 +32,7 @@ def main():
     playerturn = True
     while not won or not full:
         # Draw the board at the start of every iteration
-        drawBoard()
+        drawboard()
         # Ask the user to place a marker. Pass arguments as appropriate
         if playerturn:
             placepiece("Player 1", player1)
@@ -43,10 +43,10 @@ def main():
         playerturn = not playerturn
 
         # Now check endgame conditions
-        if checkWin():
+        if checkwin():
             # If the player has won, exit the loop and end the game
             break
-        elif isBoardFull():
+        elif isboardfull():
             # If no win condition has been met and the board is full, end the game
             break
         else:
@@ -85,7 +85,7 @@ def introduction():
     print('The winner is the first person to get three markers in a row horizontally, vertically or diagonally.')
     print('Player 1 will begin...')
 
-def drawBoard():
+def drawboard():
     # print the current state of the board
     print(board['1'] + '|' + board['2'] + '|' + board['3'])
     print('-----')
@@ -109,7 +109,7 @@ def isempty(playerinput):
         return True
 
 
-def checkWin():
+def checkwin():
     # The win conditions are three identical markers in a row (with indices):
     #   Horizontally (1,2,3 or 4,5,6 or 7,8,9)
     #   Vertically (1,4,7 or 2,5,8 or 3,6,9)
@@ -117,7 +117,7 @@ def checkWin():
     pass
 
 
-def isBoardFull():
+def isboardfull():
     # Check to see if the board is full. Returns false if at least one space is empty, otherwise false
     for v in board.items():
         if v == '':
