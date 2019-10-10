@@ -6,7 +6,7 @@
 # Date Started: 8th October 2019
 # Date Completed:
 
-# board variable holds the current state of the board. Accessed through the functions.
+# board variable holds the current state of the board. Accessed through function, global for ease of access.
 board = {"1": '', "2": '', "3": '', "4": '', "5": '', "6": '', "7": '', "8": '', "9": ''}
 
 
@@ -25,13 +25,12 @@ def main():
     # Print the introduction of the game
     introduction()
 
-
     # won will record the win state of the game, full records the current state of board - both set to false initially
     won = False
     full = False
     # playerturn denotes the current player. True = Player 1, False = 0
     playerturn = True
-    while not won or full:
+    while not won or not full:
         # Draw the board at the start of every iteration
         drawBoard()
         # Ask the user to place a marker. Pass arguments as appropriate
@@ -40,7 +39,10 @@ def main():
         else:
             placepiece("Player 2", player2)
 
-        # Now to check endgame conditions
+        # Negate playerturn each time
+        playerturn = not playerturn
+
+        # Now check endgame conditions
         if checkWin():
             # If the player has won, exit the loop and end the game
             break
@@ -78,12 +80,19 @@ def introduction():
     print(demoboard[3] + '|' + demoboard[4] + '|' + demoboard[5])
     print('-----')
     print(demoboard[6] + '|' + demoboard[7] + '|' + demoboard[8])
+    print('')
     print('Indicate where you wish to place your marker by entering the number of an empty square.')
     print('The winner is the first person to get three markers in a row horizontally, vertically or diagonally.')
     print('Player 1 will begin...')
 
 def drawBoard():
-    pass
+    # print the current state of the board
+    print(board['1'] + '|' + board['2'] + '|' + board['3'])
+    print('-----')
+    print(board['4'] + '|' + board['5'] + '|' + board['6'])
+    print('-----')
+    print(board['7'] + '|' + board['8'] + '|' + board['9'])
+    print('')
 
 
 def placepiece(player, piece):
@@ -91,15 +100,31 @@ def placepiece(player, piece):
 
 
 def isempty(playerinput):
-    pass
+    # check to see if a particular space is occupied
+    space = board.get(playerinput)
+    if space == '':
+        return False
+    else:
+        print('Error - space is occupied. Please try again.')
+        return True
 
 
 def checkWin():
+    # The win conditions are three identical markers in a row (with indices):
+    #   Horizontally (1,2,3 or 4,5,6 or 7,8,9)
+    #   Vertically (1,4,7 or 2,5,8 or 3,6,9)
+    #   Diagonally (1,5,9 or 3,5,7)
     pass
 
 
 def isBoardFull():
-    pass
+    # Check to see if the board is full. Returns false if at least one space is empty, otherwise false
+    for v in board.items():
+        if v == '':
+            return False
+    # If no spaces remain:
+    print('The board is full with no clear winner. Game Ended.')
+    return True
 
 
 # Start the program at the main() function
