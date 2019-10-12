@@ -25,21 +25,20 @@ def main():
     # Print the introduction of the game
     introduction()
 
-    # won will record the win state of the game, full records the current state of board - both set to false initially
-    won = False
-    full = False
     # playerturn denotes the current player. True = Player 1, False = 0
     playerturn = True
-    while not won or not full:
+    while True:
         # Draw the board at the start of every iteration
         drawboard()
         # Ask the user to place a marker. Pass arguments as appropriate
         if playerturn:
-            placepiece("Player 1", player1)
+            place = input('Player 1, where do you want to place a marker')
+            placepiece("Player 1", player1, place)
         else:
-            placepiece("Player 2", player2)
+            place = input('Player 1, where do you want to place a marker')
+            placepiece("Player 2", player2, place)
 
-        # Negate playerturn each time
+        # Negate playerturn each time to switch between players
         playerturn = not playerturn
 
         # Now check endgame conditions
@@ -85,6 +84,7 @@ def introduction():
     print('The winner is the first person to get three markers in a row horizontally, vertically or diagonally.')
     print('Player 1 will begin...')
 
+
 def drawboard():
     # print the current state of the board
     print(board['1'] + '|' + board['2'] + '|' + board['3'])
@@ -95,8 +95,14 @@ def drawboard():
     print('')
 
 
-def placepiece(player, piece):
-    pass
+def placepiece(player, piece, position):
+    # Place the player's piece on the board - as long as the space is empty
+    if isempty(position):
+        pass
+    else:
+        # Skip this turn and let the other user take a turn
+        print('Error - space is occupied. Please try again.')
+        pass
 
 
 def isempty(playerinput):
@@ -105,7 +111,6 @@ def isempty(playerinput):
     if space == '':
         return False
     else:
-        print('Error - space is occupied. Please try again.')
         return True
 
 
