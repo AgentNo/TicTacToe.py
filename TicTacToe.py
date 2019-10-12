@@ -6,6 +6,8 @@
 # Date Started: 8th October 2019
 # Date Completed:
 
+import sys  # required for exiting the game
+
 # board variable holds the current state of the board. Accessed through function, global for ease of access.
 board = {"1": '', "2": '', "3": '', "4": '', "5": '', "6": '', "7": '', "8": '', "9": ''}
 
@@ -13,13 +15,13 @@ board = {"1": '', "2": '', "3": '', "4": '', "5": '', "6": '', "7": '', "8": '',
 def main():
     print('Welcome to Tic Tac Toe!')
 
-    # Direct players to choose a piece
-    pieces = ["X", "O"]
+    # Direct players to choose a marker
+    markers = ["X", "O"]
     # More efficient to deal with this in terms of indices rather than actual array content
-    index = choosepiece()
-    player1 = pieces[index]
-    del pieces[index]
-    player2 = pieces[0]
+    index = choosemarker()
+    player1 = markers[index]
+    del markers[index]
+    player2 = markers[0]
     print('Player 1 is ' + player1 + "and Player 2 is " + player2)
     print('Setting up game...')
     # Print the introduction of the game
@@ -32,20 +34,27 @@ def main():
         drawboard()
         # Ask the user to place a marker. Pass arguments as appropriate
         if playerturn:
-            place = input('Player 1, where do you want to place a marker')
-            placepiece("Player 1", player1, place)
+            location = input('Player 1, where do you want to place a marker?')
+            placemarker("Player 1", player1, location)
+            if checkwin(player1):
+                # If Player 1 has won, print message and stop the game
+                print('Player 1 got three in a row and wins the game!')
+                print('Thank you for playing. Exiting the game...')
+                sys.exit()
         else:
-            place = input('Player 1, where do you want to place a marker')
-            placepiece("Player 2", player2, place)
+            location = input('Player 1, where do you want to place a marker?')
+            placemarker("Player 2", player2, location)
+            if checkwin(player2):
+                # If Player 2 has won, print message and stop the game
+                print('Player 2 got three in a row and wins the game!')
+                print('Thank you for playing. Exiting the game...')
+                sys.exit()
 
         # Negate playerturn each time to switch between players
         playerturn = not playerturn
 
-        # Now check endgame conditions
-        if checkwin():
-            # If the player has won, exit the loop and end the game
-            break
-        elif isboardfull():
+        # Now check if the board is full
+        if isboardfull():
             # If no win condition has been met and the board is full, end the game
             break
         else:
@@ -55,7 +64,7 @@ def main():
 
 
 # Allows the first player to choose their piece, X or O. Player 2 will be assigned what player 1 does not pick.
-def choosepiece():
+def choosemarker():
     while True:
         # Keep looping until the player chooses either X or O
         choice = input('Player 1, would you like to be X or O?')[0]
@@ -95,14 +104,16 @@ def drawboard():
     print('')
 
 
-def placepiece(player, piece, position):
-    # Place the player's piece on the board - as long as the space is empty
+def placemarker(player, piece, position):
+    # Place the player's marker on the board as long as the space is empty
     if isempty(position):
-        pass
+        # place the player's marker at the specified position
+        board[position] = piece
+        print(player + ' successfully placed an ' + piece + ' at position ' + str(position) + '.')
     else:
         # Skip this turn and let the other user take a turn
-        print('Error - space is occupied. Please try again.')
-        pass
+        # TODO: Allow user to attempt another placement
+        print('Error - space is occupied. Skipping turn.')
 
 
 def isempty(playerinput):
@@ -114,12 +125,41 @@ def isempty(playerinput):
         return True
 
 
-def checkwin():
-    # The win conditions are three identical markers in a row (with indices):
-    #   Horizontally (1,2,3 or 4,5,6 or 7,8,9)
-    #   Vertically (1,4,7 or 2,5,8 or 3,6,9)
-    #   Diagonally (1,5,9 or 3,5,7)
-    pass
+def checkwin(marker):
+    # The win conditions are three identical markers in a row (with indices), with leads to 7 scenarios per marker:
+    #   Horizontally (1,2,3 or 4,5,6 or 7,8,9) - consecutive squares
+    #   Vertically (1,4,7 or 2,5,8 or 3,6,9) - every third square IF pos = 1, 2 or 3
+    #   Diagonally (1,5,9 or 3,5,7) - every fourth square (1) or second square (3)
+
+    # We will base the search off the player's marker - more efficient that writing code for both x and o
+    # No other way except a really long if statement. Or a very long return statement. Either or.
+    if board.get('1') == marker and board.get('2') == marker and board.get('3') == marker:
+        # Player won horizontally
+        return True
+    elif board.get('4') == marker and board.get('5') == marker and board.get('6') == marker:
+        # Player won horizontally
+        return True
+    elif board.get('7') == marker and board.get('8') == marker and board.get('9') == marker:
+        # Player won horizontally
+        return True
+    elif board.get('1') == marker and board.get('4') == marker and board.get('7') == marker:
+        # Player won vertically
+        return True
+    elif board.get('2') == marker and board.get('5') == marker and board.get('8') == marker:
+        # Player won vertically
+        return True
+    elif board.get('3') == marker and board.get('6') == marker and board.get('9') == marker:
+        # Player won vertically
+        return True
+    elif board.get('1') == marker and board.get('5') == marker and board.get('9') == marker:
+        # Player won diagonally
+        return True
+    elif board.get('3') == marker and board.get('5') == marker and board.get('7') == marker:
+        # Player won diagonally
+        return True
+    else:
+        # Player has not got three in a row
+        return False
 
 
 def isboardfull():
