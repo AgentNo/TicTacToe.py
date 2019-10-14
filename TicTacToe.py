@@ -1,15 +1,16 @@
 # A simple Tic Tac Toe game. Can be played by two players via the console.
-# Project made for Jose Portilla's Python Bootcamp on Udemy, modified by myself.
+# Project made as part of Jose Portilla's Python Bootcamp on Udemy.
 #
 #
 # Author: AgentNo
 # Date Started: 8th October 2019
-# Date Completed:
+# Date Completed: October 2019
 
 import sys  # required for exiting the game
+import re  # validates input
 
 # board variable holds the current state of the board. Accessed through function, global for ease of access.
-board = {"1": '', "2": '', "3": '', "4": '', "5": '', "6": '', "7": '', "8": '', "9": ''}
+board = {"1": '-', "2": '-', "3": '-', "4": '-', "5": '-', "6": '-', "7": '-', "8": '-', "9": '-'}
 
 
 def main():
@@ -22,7 +23,7 @@ def main():
     player1 = markers[index]
     del markers[index]
     player2 = markers[0]
-    print('Player 1 is ' + player1 + "and Player 2 is " + player2)
+    print('Player 1 is ' + player1 + " and Player 2 is " + player2)
     print('Setting up game...')
     # Print the introduction of the game
     introduction()
@@ -34,16 +35,34 @@ def main():
         drawboard()
         # Ask the user to place a marker. Pass arguments as appropriate
         if playerturn:
-            location = input('Player 1, where do you want to place a marker?')
-            placemarker("Player 1", player1, location)
+            validated = False
+            while not validated:
+                location = input('Player 1, where do you want to place a marker?')
+                # validate the user's input
+                if validateinput(location):
+                    placemarker("Player 1", player1, location)
+                    validated = True
+                else:
+                    print('Error - Please enter a number between 1 and 9 (inclusive')
+
+            # Check for win
             if checkwin(player1):
                 # If Player 1 has won, print message and stop the game
                 print('Player 1 got three in a row and wins the game!')
                 print('Thank you for playing. Exiting the game...')
                 sys.exit()
         else:
-            location = input('Player 1, where do you want to place a marker?')
-            placemarker("Player 2", player2, location)
+            validated = False
+            while not validated:
+                location = input('Player 2, where do you want to place a marker?')
+                # validate the user's input
+                if validateinput(location):
+                    placemarker("Player 2", player2, location)
+                    validated = True
+                else:
+                    print('Error - Please enter a number between 1 and 9 (inclusive')
+
+            # Check for win
             if checkwin(player2):
                 # If Player 2 has won, print message and stop the game
                 print('Player 2 got three in a row and wins the game!')
@@ -56,11 +75,11 @@ def main():
         # Now check if the board is full
         if isboardfull():
             # If no win condition has been met and the board is full, end the game
+            print('Thank you for playing! Stopping game...')
             break
         else:
             # If neither condition has been met, reiterate the game
             continue
-    print('Thank you for playing! Stopping game...')
 
 
 # Allows the first player to choose their piece, X or O. Player 2 will be assigned what player 1 does not pick.
@@ -81,7 +100,7 @@ def choosemarker():
 
 
 def introduction():
-    demoboard = [range(0, 10)]
+    demoboard = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     print('In this game, you will take turns placing markers on the board. The board looks like this: \n')
     print(demoboard[0] + '|' + demoboard[1] + '|' + demoboard[2])
     print('-----')
@@ -112,14 +131,14 @@ def placemarker(player, piece, position):
         print(player + ' successfully placed an ' + piece + ' at position ' + str(position) + '.')
     else:
         # Skip this turn and let the other user take a turn
-        # TODO: Allow user to attempt another placement
+        # TODO: Allow user to make another attempt
         print('Error - space is occupied. Skipping turn.')
 
 
 def isempty(playerinput):
     # check to see if a particular space is occupied
-    space = board.get(playerinput)
-    if space == '':
+    space = board[str(playerinput)]
+    if space == '-':
         return False
     else:
         return True
@@ -164,12 +183,22 @@ def checkwin(marker):
 
 def isboardfull():
     # Check to see if the board is full. Returns false if at least one space is empty, otherwise false
-    for v in board.items():
-        if v == '':
+    for v in board.values():
+        if v == '-':
             return False
     # If no spaces remain:
     print('The board is full with no clear winner. Game Ended.')
     return True
+
+
+def validateinput(input):
+    # Validate the user's input to ensure that only 1-9 has been input
+    regex = re.compile(r'[1-9]')
+    if bool(regex.search(str(input))):
+        # If the input complies with the regex, return True
+        return True
+    else:
+        return False
 
 
 # Start the program at the main() function
