@@ -4,10 +4,11 @@
 #
 # Author: AgentNo
 # Date Started: 8th October 2019
-# Date Completed: October 2019
+# Date Completed: 17th October 2019
 
 import sys  # required for exiting the game
 import re  # validates input
+import time # required to delay execution before starting game
 
 # board variable holds the current state of the board. Accessed through function, global for ease of access.
 board = {"1": '-', "2": '-', "3": '-', "4": '-', "5": '-', "6": '-', "7": '-', "8": '-', "9": '-'}
@@ -25,6 +26,8 @@ def main():
     player2 = markers[0]
     print('Player 1 is ' + player1 + " and Player 2 is " + player2)
     print('Setting up game...')
+    # delay for dramatic effect
+    time.sleep(2)
     # Print the introduction of the game
     introduction()
 
@@ -43,7 +46,7 @@ def main():
                     placemarker("Player 1", player1, location)
                     validated = True
                 else:
-                    print('Error - Please enter a number between 1 and 9 (inclusive')
+                    print('Error - Please enter a number between 1 and 9 (inclusive)')
 
             # Check for win
             if checkwin(player1):
@@ -125,13 +128,12 @@ def drawboard():
 
 def placemarker(player, piece, position):
     # Place the player's marker on the board as long as the space is empty
-    if isempty(position):
+    if not isempty(position):
         # place the player's marker at the specified position
         board[position] = piece
         print(player + ' successfully placed an ' + piece + ' at position ' + str(position) + '.')
     else:
         # Skip this turn and let the other user take a turn
-        # TODO: Allow user to make another attempt
         print('Error - space is occupied. Skipping turn.')
 
 
