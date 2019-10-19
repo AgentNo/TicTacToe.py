@@ -1,4 +1,4 @@
-# A simple Tic Tac Toe game. Can be played by two players via the console.
+# A simple Tic Tac Toe game in Python. Can be played by two players via the console.
 # Project made as part of Jose Portilla's Python Bootcamp on Udemy.
 #
 #
@@ -147,13 +147,13 @@ def isempty(playerinput):
 
 
 def checkwin(marker):
-    # The win conditions are three identical markers in a row (with indices), with leads to 7 scenarios per marker:
+    # The win conditions are three identical markers in a row (with indices), with leads to 7 win conditions:
     #   Horizontally (1,2,3 or 4,5,6 or 7,8,9) - consecutive squares
     #   Vertically (1,4,7 or 2,5,8 or 3,6,9) - every third square IF pos = 1, 2 or 3
     #   Diagonally (1,5,9 or 3,5,7) - every fourth square (1) or second square (3)
 
     # We will base the search off the player's marker - more efficient that writing code for both x and o
-    # No other way except a really long if statement. Or a very long return statement. Either or.
+    # No other way except a really long if statement. Or a very long return statement. Personally, I think this looks more readable
     if board.get('1') == marker and board.get('2') == marker and board.get('3') == marker:
         # Player won horizontally
         return True
@@ -203,6 +203,6 @@ def validateinput(input):
         return False
 
 
-# Start the program at the main() function
+# point of entry at main()
 if __name__ == "__main__":
     main()
